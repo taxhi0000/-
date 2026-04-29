@@ -24,5 +24,25 @@
   <!-- 결과 -->
   <div id="result"></div>
 
+
+
+<script>
+  function calculate() {
+
+    // 1. 입력값 읽기
+    const income = document.getElementById('income').value;
+    const deduction = document.getElementById('deduction').value;
+
+    // 2. 계산
+    const taxBase = income - deduction;  // 과세표준
+
+    // 3. 결과 보여주기
+    document.getElementById('result').textContent = '과세표준: ' + taxBase + '원';
+
+  }
+</script>
+
+
+
 </body>
 </html>
