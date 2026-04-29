@@ -3,7 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>종합소득세 계산기</title>
+  <style>
+  button {
+    background-color: #1B4332;
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  button:hover {
+    background-color: #15372a;
+  }
+</style>
 </head>
+
 <body>
 
   <h1>종합소득세 계산기</h1>
@@ -23,7 +39,8 @@
     <tr><td>종합소득금액</td><td id="r-income"></td></tr>
     <tr><td>소득공제</td><td id="r-deduction"></td></tr>
     <tr><td>과세표준</td><td id="r-taxbase"></td></tr>
-    <tr><td>산출세액</td><td id="r-tax"></td></tr>
+    
+    <tr><td>소득세</td><td id="r-tax"></td></tr>
     <tr><td>지방세 (10%)</td><td id="r-local"></td></tr>
     <tr><td><b>총 납부세액</b></td><td id="r-total"></td></tr>
   </table>
