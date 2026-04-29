@@ -2,11 +2,27 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>내 웹페이지</title>
+  <title>종합소득세 계산기</title>
 </head>
 <body>
 
-  안녕하세요!
+  <h1>종합소득세 계산기</h1>
+
+  <!-- 입력 폼 -->
+  <form>
+
+    <label>종합소득금액</label>
+    <input type="text" id="income" placeholder="예: 50,000,000" />
+
+    <label>소득공제</label>
+    <input type="text" id="deduction" placeholder="예: 1,500,000" />
+
+    <button type="button" onclick="calculate()">계산하기</button>
+
+  </form>
+
+  <!-- 결과 -->
+  <div id="result"></div>
 
 </body>
 </html>
