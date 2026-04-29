@@ -18,43 +18,61 @@
     <button type="button" onclick="calculate()">계산하기</button>
   </form>
 
-  <div id="result"></div>
+<div id="result" style="display:none; margin-top: 20px;">
+  <table border="1">
+    <tr><td>종합소득금액</td><td id="r-income"></td></tr>
+    <tr><td>소득공제</td><td id="r-deduction"></td></tr>
+    <tr><td>과세표준</td><td id="r-taxbase"></td></tr>
+    <tr><td>산출세액</td><td id="r-tax"></td></tr>
+    <tr><td>지방세 (10%)</td><td id="r-local"></td></tr>
+    <tr><td><b>총 납부세액</b></td><td id="r-total"></td></tr>
+  </table>
+</div>
 
   <script>
-    function calculate() {
+function calculate() {
+  const income = Number(document.getElementById('income').value.replace(/,/g, ''));
+  const deduction = Number(document.getElementById('deduction').value.replace(/,/g, ''));
+  const taxBase = income - deduction;
 
-      // 1. 입력값 읽기
-      const income = Number(document.getElementById('income').value);
-      const deduction = Number(document.getElementById('deduction').value);
+  let tax = 0;
+  if (taxBase <= 14000000) {
+    tax = taxBase * 0.06;
+  } else if (taxBase <= 50000000) {
+    tax = taxBase * 0.15 - 1260000;
+  } else if (taxBase <= 88000000) {
+    tax = taxBase * 0.24 - 5760000;
+  } else if (taxBase <= 150000000) {
+    tax = taxBase * 0.35 - 15440000;
+  } else if (taxBase <= 300000000) {
+    tax = taxBase * 0.38 - 19940000;
+  } else if (taxBase <= 500000000) {
+    tax = taxBase * 0.40 - 25940000;
+  } else if (taxBase <= 1000000000) {
+    tax = taxBase * 0.42 - 35940000;
+  } else {
+    tax = taxBase * 0.45 - 65940000;
+  }
 
-      // 2. 과세표준 계산
-      const taxBase = income - deduction;
+  const localTax = Math.round(tax * 0.1);
+  const total = tax + localTax;
 
-      // 3. 세율 적용
-      let tax = 0;
+  // 쉼표 붙이는 함수
+  function fmt(n) {
+    return Math.round(n).toLocaleString('ko-KR') + '원';
+  }
 
-      if (taxBase <= 14000000) {
-        tax = taxBase * 0.06;
-      } else if (taxBase <= 50000000) {
-        tax = taxBase * 0.15 - 1260000;
-      } else if (taxBase <= 88000000) {
-        tax = taxBase * 0.24 - 5760000;
-      } else if (taxBase <= 150000000) {
-        tax = taxBase * 0.35 - 15440000;
-      } else if (taxBase <= 300000000) {
-        tax = taxBase * 0.38 - 19940000;
-      } else if (taxBase <= 500000000) {
-        tax = taxBase * 0.40 - 25940000;
-      } else if (taxBase <= 1000000000) {
-        tax = taxBase * 0.42 - 35940000;
-      } else {
-        tax = taxBase * 0.45 - 65940000;
-      }
+  // 결과 표에 넣기
+  document.getElementById('r-income').textContent = fmt(income);
+  document.getElementById('r-deduction').textContent = fmt(deduction);
+  document.getElementById('r-taxbase').textContent = fmt(taxBase);
+  document.getElementById('r-tax').textContent = fmt(tax);
+  document.getElementById('r-local').textContent = fmt(localTax);
+  document.getElementById('r-total').textContent = fmt(total);
 
-      // 4. 결과 보여주기
-      document.getElementById('result').textContent = '산출세액: ' + tax + '원';
+  document.getElementById('result').style.display = 'block';
+}
 
-    }
   </script>
 
 </body>
