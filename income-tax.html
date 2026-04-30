@@ -92,9 +92,22 @@ td:last-child {
 
 
 .highlight {
-  background-color: #00ad79;
+  background-color: hsl(162, 40%, 51%);
 }
 
+table {
+  border-collapse: separate;
+  border-spacing: 4px;
+}
+
+td {
+  border: 1px solid #ce7e7e;
+  border-radius: 8px;
+}
+
+.highlight {
+  background-color: #b8ebd5;  /* 연한 초록 */
+}
 
 
 </style>
@@ -112,8 +125,7 @@ td:last-child {
 </nav>
 
 
-  <div id="page-tax">
-    style="display:none;"    
+  <div id="page-tax" style="display:none;">   
 
   <h1>종합소득세 계산기</h1>
 
@@ -128,7 +140,7 @@ td:last-child {
   </form>
 
 <div id="result" style="display:none; margin-top: 20px;">
-  <table border="1">
+  <table>
     <tr><td>종합소득금액</td><td id="r-income"></td></tr>
     <tr><td>소득공제</td><td id="r-deduction"></td></tr>
     <tr><td>과세표준</td><td id="r-taxbase"></td></tr>
