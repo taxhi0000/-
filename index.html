@@ -237,12 +237,9 @@ function onDateChange() {
     // 해당 월 근무일수
     let workDays;
     if (i === 0 && !isLastDay) {
-      // 퇴사월: 1일~퇴사일
       workDays = leave.getDate();
-    if (i === months - 1 && !isLastDay) {
-      // 가장 오래된 월: 전체 일수 - 퇴사일
+    } else if (i === months - 1 && !isLastDay) {
       workDays = monthEnd - leave.getDate();
-    }
     } else {
       workDays = monthEnd;
     }
