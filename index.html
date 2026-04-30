@@ -289,9 +289,11 @@ function calculateRetirement() {
   let totalSalary = 0;
   inputs.forEach(input => {
     const val = Number(input.value.replace(/,/g, '')) || 0;
-    const days = Number(input.dataset.days);
-    const monthEnd = new Date(/* 해당월 마지막날 */);
-    totalSalary += val * (days / 전체일수);
+    const workDays = Number(input.dataset.days);
+    const monthStr = input.dataset.month; // "2026-1" 형식
+    const parts = monthStr.split('-');
+    const monthEnd = new Date(parts[0], parts[1], 0).getDate(); // 해당월 전체 일수
+    totalSalary += val / monthEnd * workDays; // 일할계산
   });
   const dailyAvg = totalSalary / 90;
  
