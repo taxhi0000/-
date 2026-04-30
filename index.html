@@ -149,19 +149,13 @@ td {
     <tr class="highlight"><td>소득세</td><td id="r-tax"></td></tr>
     <tr class="highlight"><td>지방세</td><td id="r-local"></td></tr>
     <tr class="highlight"><td><b>총 납부세액</b></td><td id="r-total"></td></tr>
-
-
-
-
   </table>
 
   </div>     
 
 
-   <div id="page-leave" style="display:none;">
 
-
-<div id="page-leave" style="display:none;">
+  <div id="page-leave" style="display:none;">
   <h1>연차수당 계산기</h1>
   <form>
     <label>월 급여</label>
@@ -189,14 +183,12 @@ td {
       <tr class="highlight"><td><b>연차수당 총액</b></td><td id="l-total"></td></tr>
     </table>
   </div>
-</div>
 
 
 
 
-   </div>
 
-</div>
+
 
   <script>
 function calculate() {
@@ -268,6 +260,21 @@ function calculateLeave() {
   const hourlyWage = salary / monthlyHours;
   const dailyWage = hourlyWage * workhours;
   const total = dailyWage * unused;
+
+
+
+function showPage(page) {
+  document.getElementById('page-tax').style.display = page === 'tax' ? 'block' : 'none';
+  document.getElementById('page-leave').style.display = page === 'leave' ? 'block' : 'none';
+  document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', (page === 'tax' && i === 0) || (page === 'leave' && i === 1));
+  });
+}
+
+
+
+
+
 
   function fmt(n) {
     return Math.round(n).toLocaleString('ko-KR') + '원';
