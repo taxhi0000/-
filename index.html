@@ -425,8 +425,8 @@ function calculate() {
 function calculateLeave() {
   const salary = Number(document.getElementById('salary').value.replace(/,/g, ''));
   const workdays = Number(document.getElementById('workdays').value.replace(/[^0-9]/g, ''));
-  const workhours = Number(document.getElementById('workhours').value);
-  const unused = Number(document.getElementById('unusedleave').value);
+  const workhours = Number(document.getElementById('workhours').value.replace(/[^0-9]/g, ''));
+  const unused = Number(document.getElementById('unusedleave').value.replace(/[^0-9]/g, ''));
 
   const weeklyHours = workdays * workhours;
   const weeklyPaidHours = weeklyHours + 8;
