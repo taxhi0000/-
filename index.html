@@ -287,16 +287,13 @@ function calculateRetirement() {
   // 급여 합산 및 총 근무일수 합산
   const inputs = document.querySelectorAll('[data-month]');
   let totalSalary = 0;
-  let totalWorkDays = 0;
   inputs.forEach(input => {
     const val = Number(input.value.replace(/,/g, '')) || 0;
-    const d = Number(input.dataset.days);
-    totalSalary += val;
-    totalWorkDays += d;
+    const days = Number(input.dataset.days);
+    const monthEnd = new Date(/* 해당월 마지막날 */);
+    totalSalary += val * (days / 전체일수);
   });
- 
-  // 평균임금 (일)
-  const dailyAvg = totalSalary / totalWorkDays;
+  const dailyAvg = totalSalary / 90;
  
   // 퇴직금 = 평균임금 × 30일 × (근속일수 / 365)
   const retirementPay = dailyAvg * 30 * (totalDays / 365);
