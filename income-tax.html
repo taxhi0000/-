@@ -137,15 +137,15 @@ function calculate() {
   const total = tax + localTax;
 
 
-  function fmtInput(el) {
-    const raw = el.value.replace(/[^0-9]/g, '');
-    el.value = raw ? parseInt(raw).toLocaleString('ko-KR') : '';
-  }
+function fmtInput(el) {
+  const raw = el.value.replace(/[^0-9]/g, '');
+  el.value = raw ? parseInt(raw).toLocaleString('ko-KR') : '';
+}
 
-  // 쉼표 붙이는 함수
-  function fmt(n) {
-    return Math.round(n).toLocaleString('ko-KR') + '원';
-  }
+// 쉼표 붙이는 함수
+function fmt(n) {
+  return Math.round(n).toLocaleString('ko-KR') + '원';
+}
 
   // 결과 표에 넣기
   document.getElementById('r-income').textContent = fmt(income);
