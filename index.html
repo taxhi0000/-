@@ -232,7 +232,7 @@ function onDateChange() {
  
   // 해당 월 계산 (퇴사월 포함 최근 months개월)
   let html = `<p style="color:${isLastDay ? '#888' : 'red'}; font-size:0.85rem; margin-bottom:8px;">
-    ${isLastDay ? '말일 퇴사: 최근 3개월 급여 입력' : '월중 퇴사: 최근 4개월 급여 입력 (그냥 해당 월에 받은 전체 급여 입력하시면 됩니다)'}
+    ${isLastDay ? '말일 퇴사: 최근 3개월 급여 입력' : '월중 퇴사: 최근 4개월 급여 입력 (그냥 해당 월에 받은 전체급여 입력)'}
   </p>`;
  
   for (let i = months - 1; i >= 0; i--) {
