@@ -107,9 +107,11 @@ td:last-child {
   <script>
 function calculate() {
   const income = Number(document.getElementById('income').value.replace(/,/g, ''));
+  const deductionRaw = Number(document.getElementById('deduction').value.replace(/,/g, ''));
   const deduction = Math.min(deductionRaw, income);
   const taxBase = income - deduction;
 
+    let tax = 0;
     let rate = 0;
   if (taxBase <= 14000000) {
     rate = 6; tax = taxBase * 0.06;
