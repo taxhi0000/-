@@ -119,6 +119,7 @@ small {
 <nav>
   <button class="nav-btn" onclick="showPage('tax')">종합소득세 계산기</button>
   <button class="nav-btn" onclick="showPage('leave')">연차수당 계산기</button>
+  <button class="nav-btn" onclick="showPage('retirement')">퇴직금 계산기</button>
 </nav>
 
 <!-- 종합소득세 계산기 -->
@@ -171,15 +172,192 @@ small {
   </div>
 </div>
 
-<script>
 
-function showPage(page) {
-  document.getElementById('page-tax').style.display = page === 'tax' ? 'block' : 'none';
-  document.getElementById('page-leave').style.display = page === 'leave' ? 'block' : 'none';
-  document.querySelectorAll('.nav-btn').forEach((btn, i) => {
-    btn.classList.toggle('active', (page === 'tax' && i === 0) || (page === 'leave' && i === 1));
-  });
+<!-- 퇴직금 계산기 페이지 -->
+<div id="page-retirement" style="display:none;">
+  <h1>퇴직금 계산기</h1>
+  <form>
+    <label>입사일</label>
+    <input type="date" id="join-date" onchange="onDateChange()" />
+ 
+    <label>퇴사일</label>
+    <input type="date" id="leave-date" onchange="onDateChange()" />
+ 
+    <div id="salary-section" style="display:none;">
+      <div id="salary-inputs"></div>
+    </div>
+ 
+    <button type="button" onclick="calculateRetirement()">계산하기</button>
+  </form>
+ 
+  <div id="result-retirement" style="display:none; margin-top: 20px;">
+    <table>
+      <tr><td>근속기간</td><td id="ret-period"></td></tr>
+      <tr><td>근속일수</td><td id="ret-days"></td></tr>
+      <tr><td>평균임금 (일)</td><td id="ret-avg"></td></tr>
+      <tr class="highlight"><td>퇴직금</td><td id="ret-pay"></td></tr>
+      <tr><td>퇴직소득세</td><td id="ret-tax"></td></tr>
+      <tr><td>퇴직지방세</td><td id="ret-local"></td></tr>
+      <tr class="highlight"><td><b>실수령액</b></td><td id="ret-total"></td></tr>
+    </table>
+  </div>
+</div>
+ 
+<script>
+// 퇴직금 계산기 로직
+ 
+function onDateChange() {
+  const joinDate = document.getElementById('join-date').value;
+  const leaveDate = document.getElementById('leave-date').value;
+  if (!joinDate || !leaveDate) return;
+ 
+  const leave = new Date(leaveDate);
+  const lastDay = new Date(leave.getFullYear(), leave.getMonth() + 1, 0).getDate();
+  const isLastDay = leave.getDate() === lastDay;
+  const months = isLastDay ? 3 : 4;
+ 
+  // 급여 입력칸 생성
+  const section = document.getElementById('salary-section');
+  const container = document.getElementById('salary-inputs');
+  section.style.display = 'block';
+ 
+  // 해당 월 계산 (퇴사월 포함 최근 months개월)
+  let html = `<p style="color:#888; font-size:0.85rem; margin-bottom:8px;">
+    ${isLastDay ? '말일 퇴사: 최근 3개월 급여 입력' : '월중 퇴사: 최근 4개월 급여 입력'}
+  </p>`;
+ 
+  for (let i = months - 1; i >= 0; i--) {
+    const d = new Date(leave.getFullYear(), leave.getMonth() - i, 1);
+    const y = d.getFullYear();
+    const m = d.getMonth() + 1;
+    const monthEnd = new Date(y, m, 0).getDate();
+    // 해당 월 근무일수
+    let workDays;
+    if (i === 0 && !isLastDay) {
+      // 퇴사월: 1일~퇴사일
+      workDays = leave.getDate();
+    } else if (i === months - 1 && !isLastDay) {
+      // 가장 오래된 월: 입력 기준으로 전체
+      workDays = monthEnd;
+    } else {
+      workDays = monthEnd;
+    }
+ 
+    html += `
+      <div style="margin-bottom:12px;">
+        <label>${y}년 ${m}월 급여 <span style="color:#888; font-size:0.8rem;">(근무일수: ${workDays}일)</span></label>
+        <input type="text" id="sal-${y}-${m}" data-days="${workDays}" data-month="${y}-${m}" placeholder="예: 2,200,000" oninput="fmtInput(this)" />
+      </div>`;
+  }
+ 
+  container.innerHTML = html;
 }
+ 
+function calculateRetirement() {
+  const joinDate = new Date(document.getElementById('join-date').value);
+  const leaveDate = new Date(document.getElementById('leave-date').value);
+ 
+  if (!joinDate || !leaveDate || isNaN(joinDate) || isNaN(leaveDate)) {
+    alert('입사일과 퇴사일을 입력해주세요.');
+    return;
+  }
+ 
+  // 근속일수
+  const diffMs = leaveDate - joinDate;
+  const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
+ 
+  // 근속기간 표시
+  let years = leaveDate.getFullYear() - joinDate.getFullYear();
+  let months = leaveDate.getMonth() - joinDate.getMonth();
+  let days = leaveDate.getDate() - joinDate.getDate();
+  if (days < 0) { months--; days += new Date(leaveDate.getFullYear(), leaveDate.getMonth(), 0).getDate(); }
+  if (months < 0) { years--; months += 12; }
+  const periodStr = `${years}년 ${months}개월 ${days}일`;
+ 
+  // 근속연수 (1년 미만 올림)
+  const serviceYears = Math.ceil(totalDays / 365);
+ 
+  // 급여 합산 및 총 근무일수 합산
+  const inputs = document.querySelectorAll('[data-month]');
+  let totalSalary = 0;
+  let totalWorkDays = 0;
+  inputs.forEach(input => {
+    const val = Number(input.value.replace(/,/g, '')) || 0;
+    const d = Number(input.dataset.days);
+    totalSalary += val;
+    totalWorkDays += d;
+  });
+ 
+  // 평균임금 (일)
+  const dailyAvg = totalSalary / totalWorkDays;
+ 
+  // 퇴직금 = 평균임금 × 30일 × (근속일수 / 365)
+  const retirementPay = dailyAvg * 30 * (totalDays / 365);
+ 
+  // 퇴직소득세 계산
+  const tax = calcRetirementTax(retirementPay, serviceYears);
+  const localTax = Math.floor(tax * 0.1 / 10) * 10;
+  const netPay = retirementPay - tax - localTax;
+ 
+  // 결과 표시
+  document.getElementById('ret-period').textContent = periodStr;
+  document.getElementById('ret-days').textContent = totalDays + '일';
+  document.getElementById('ret-avg').textContent = fmt(dailyAvg);
+  document.getElementById('ret-pay').textContent = fmt(retirementPay);
+  document.getElementById('ret-tax').textContent = fmt(tax);
+  document.getElementById('ret-local').textContent = fmt(localTax);
+  document.getElementById('ret-total').textContent = fmt(netPay);
+ 
+  document.getElementById('result-retirement').style.display = 'block';
+}
+ 
+function calcRetirementTax(retirementPay, serviceYears) {
+  // 근속연수공제
+  let deduction = 0;
+  if (serviceYears <= 5) deduction = serviceYears * 1000000;
+  else if (serviceYears <= 10) deduction = 5000000 + (serviceYears - 5) * 2000000;
+  else if (serviceYears <= 20) deduction = 15000000 + (serviceYears - 10) * 2500000;
+  else deduction = 40000000 + (serviceYears - 20) * 3000000;
+ 
+  // 퇴직소득 = 퇴직금 - 근속연수공제
+  const retirementIncome = Math.max(retirementPay - deduction, 0);
+ 
+  // 환산급여 = 퇴직소득 / 근속연수 * 12
+  const annualIncome = retirementIncome / serviceYears * 12;
+ 
+  // 환산급여별 공제
+  let incomeDeduction = 0;
+  if (annualIncome <= 8000000) incomeDeduction = annualIncome;
+  else if (annualIncome <= 70000000) incomeDeduction = 8000000 + (annualIncome - 8000000) * 0.6;
+  else if (annualIncome <= 100000000) incomeDeduction = 45200000 + (annualIncome - 70000000) * 0.55;
+  else if (annualIncome <= 300000000) incomeDeduction = 61700000 + (annualIncome - 100000000) * 0.45;
+  else incomeDeduction = 151700000 + (annualIncome - 300000000) * 0.35;
+ 
+  // 과세표준 환산
+  const taxBase = annualIncome - incomeDeduction;
+ 
+  // 세율 적용
+  let annualTax = 0;
+  if (taxBase <= 14000000) annualTax = taxBase * 0.06;
+  else if (taxBase <= 50000000) annualTax = taxBase * 0.15 - 1260000;
+  else if (taxBase <= 88000000) annualTax = taxBase * 0.24 - 5760000;
+  else if (taxBase <= 150000000) annualTax = taxBase * 0.35 - 15440000;
+  else if (taxBase <= 300000000) annualTax = taxBase * 0.38 - 19940000;
+  else if (taxBase <= 500000000) annualTax = taxBase * 0.40 - 25940000;
+  else if (taxBase <= 1000000000) annualTax = taxBase * 0.42 - 35940000;
+  else annualTax = taxBase * 0.45 - 65940000;
+ 
+  // 퇴직소득세 = 환산산출세액 / 12 * 근속연수
+  const retirementTax = Math.floor((annualTax / 12 * serviceYears) / 10) * 10;
+  return Math.max(retirementTax, 0);
+}
+
+
+
+
+
+
+
 
 function fmtInput(el) {
   const raw = el.value.replace(/[^0-9]/g, '');
@@ -244,6 +422,7 @@ function calculateLeave() {
   const dailyWage = hourlyWage * workhours;
   const total = dailyWage * unused;
 
+
   document.getElementById('l-salary').textContent = fmt(salary);
   document.getElementById('l-monthly-hours').textContent = Math.round(monthlyHours) + '시간';
   document.getElementById('l-hourly').textContent = fmt(hourlyWage);
@@ -253,6 +432,24 @@ function calculateLeave() {
 
   document.getElementById('result-leave').style.display = 'block';
 }
+
+
+function showPage(page) {
+  document.getElementById('page-tax').style.display = page === 'tax' ? 'block' : 'none';
+  document.getElementById('page-leave').style.display = page === 'leave' ? 'block' : 'none';
+  document.getElementById('page-retirement').style.display = page === 'retirement' ? 'block' : 'none';
+  document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+    btn.classList.toggle('active',
+      (page === 'tax' && i === 0) ||
+      (page === 'leave' && i === 1) ||
+      (page === 'retirement' && i === 2)
+    );
+  });
+}
+
+
+
+
 
 </script>
 
