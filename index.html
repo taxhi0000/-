@@ -5,7 +5,6 @@
   <title>김호연 세금계산기</title>
   <meta property="og:title" content="김호연 세금계산기" />
 
-
   <style>
 
 nav { display: flex; gap: 12px; margin-bottom: 24px; }
@@ -25,73 +24,57 @@ nav { display: flex; gap: 12px; margin-bottom: 24px; }
   color: white;
 }
 
-/*버튼 위에 마우스 올리면 버튼 색, 글자색 변경*/
 .nav-btn:hover {
   background-color: #1B4332;
   color: white;
 }
 
-
-
-
-/*전체 폼 박스 (배치, 간격)*/
+/*전체 폼 박스*/
 form {
   display: flex;
   flex-direction: column;
   gap: 16px;
   max-width: 400px;
-  font-size: 1rem;       /* 글자 크기 */
-  color: #333333;          /* 글자 색깔 */
-  letter-spacing: 0.05em;  /* 글자 간격 */
+  font-size: 1rem;
+  color: #333333;
+  letter-spacing: 0.05em;
 }
 
-/* 항목명 */
 label {
   display: block;
   margin-bottom: 6px;
   font-weight: 600;
-  font-size: 1rem;       /* 글자 크기 */
-  color: #333333;          /* 글자 색깔 */
-  letter-spacing: 0.05em;  /* 글자 간격 */
+  font-size: 1rem;
+  color: #333333;
+  letter-spacing: 0.05em;
 }
 
-/*입력칸*/
 input {
-  text-align: right;
-  display: block;
-  width: 60%;
-  height: 3rem;
-  padding: 0 1rem;
-  font-size: 3rem;
-}
-/*입력칸*/
-    input {
   text-align: right;
   height: 3rem;
   padding: 0 5rem;
   font-size: 1rem;
 }
 
-/*계산하기*/
 button {
-  background-color: #1B4332;  /* 버튼 배경색 */
-  color: white;                /* 글자색 */
-  padding: 10px 20px;          /* 여백 (위아래 px, 좌우 px) */
-  border: none;                /* 테두리 제거 */
-  border-radius: 8px;          /* 모서리 둥글게 */
-  cursor: pointer;             /* 마우스 올리면 손가락 모양 */
-  font-size: 20px;             /* 글자 크기 */
+  background-color: #1B4332;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 20px;
 }
 
-  button:hover {
-    background-color: #15372a;
-  }
+button:hover {
+  background-color: #15372a;
+}
 
-
-/*결과칸*/
 td {
   padding: 12px 16px;
   font-size: 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }
 
 td:last-child {
@@ -99,90 +82,64 @@ td:last-child {
   padding-right: 15px;
 }
 
-
-.highlight {
-  background-color: hsl(162, 40%, 51%);
-}
-
 table {
   border-collapse: separate;
   border-spacing: 4px;
 }
 
-td {
-  border: 1px solid #ce7e7e;
-  border-radius: 8px;
-}
-
 .highlight {
-  background-color: #b8ebd5;  /* 연한 초록 */
+  background-color: #b8ebd5;
 }
 
-
-</style>
-
-
+  </style>
 </head>
 
 <body>
-
-
 
 <nav>
   <button class="nav-btn" onclick="showPage('tax')">종합소득세 계산기</button>
   <button class="nav-btn" onclick="showPage('leave')">연차수당 계산기</button>
 </nav>
 
-
-  <div id="page-tax" style="display:none;">   
-
+<!-- 종합소득세 계산기 -->
+<div id="page-tax" style="display:none;">
   <h1>종합소득세 계산기</h1>
-
   <form>
     <label>종합소득금액</label>
     <input type="text" id="income" placeholder="예: 50,000,000" oninput="fmtInput(this)" />
-
     <label>소득공제</label>
     <input type="text" id="deduction" placeholder="예: 1,500,000" oninput="fmtInput(this)" />
-
     <button type="button" onclick="calculate()">계산하기</button>
   </form>
+  <div id="result" style="display:none; margin-top: 20px;">
+    <table>
+      <tr><td>종합소득금액</td><td id="r-income"></td></tr>
+      <tr><td>소득공제</td><td id="r-deduction"></td></tr>
+      <tr><td>과세표준</td><td id="r-taxbase"></td></tr>
+      <tr><td>적용세율</td><td id="r-rate"></td></tr>
+      <tr class="highlight"><td>소득세</td><td id="r-tax"></td></tr>
+      <tr class="highlight"><td>지방세</td><td id="r-local"></td></tr>
+      <tr class="highlight"><td><b>총 납부세액</b></td><td id="r-total"></td></tr>
+    </table>
+  </div>
+</div>
 
-<div id="result" style="display:none; margin-top: 20px;">
-  <table>
-    <tr><td>종합소득금액</td><td id="r-income"></td></tr>
-    <tr><td>소득공제</td><td id="r-deduction"></td></tr>
-    <tr><td>과세표준</td><td id="r-taxbase"></td></tr>
-    <tr><td>적용세율</td><td id="r-rate"></td></tr>
-    <tr class="highlight"><td>소득세</td><td id="r-tax"></td></tr>
-    <tr class="highlight"><td>지방세</td><td id="r-local"></td></tr>
-    <tr class="highlight"><td><b>총 납부세액</b></td><td id="r-total"></td></tr>
-  </table>
-
-  </div>     
-
-
-
-  <div id="page-leave" style="display:none;">
+<!-- 연차수당 계산기 -->
+<div id="page-leave" style="display:none;">
   <h1>연차수당 계산기</h1>
   <form>
     <label>월 급여</label>
     <input type="text" id="salary" placeholder="예: 3,000,000" oninput="fmtInput(this)" />
-
     <label>주 근로일수</label>
     <input type="text" id="workdays" placeholder="예: 5" />
-
     <label>일 근로시간</label>
     <input type="text" id="workhours" placeholder="예: 8" />
-
     <label>미사용 연차일수</label>
     <input type="text" id="unusedleave" placeholder="예: 2" />
-
     <button type="button" onclick="calculateLeave()">계산하기</button>
   </form>
-
   <div id="result-leave" style="display:none; margin-top: 20px;">
-    <table border="1">
+    <table>
       <tr><td>월 급여</td><td id="l-salary"></td></tr>
       <tr><td>월 소정근로시간</td><td id="l-monthly-hours"></td></tr>
       <tr><td>시간당 통상임금</td><td id="l-hourly"></td></tr>
@@ -191,59 +148,57 @@ td {
       <tr class="highlight"><td><b>연차수당 총액</b></td><td id="l-total"></td></tr>
     </table>
   </div>
+</div>
 
+<script>
 
+function showPage(page) {
+  document.getElementById('page-tax').style.display = page === 'tax' ? 'block' : 'none';
+  document.getElementById('page-leave').style.display = page === 'leave' ? 'block' : 'none';
+  document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', (page === 'tax' && i === 0) || (page === 'leave' && i === 1));
+  });
+}
 
+function fmtInput(el) {
+  const raw = el.value.replace(/[^0-9]/g, '');
+  el.value = raw ? parseInt(raw).toLocaleString('ko-KR') : '';
+}
 
+function fmt(n) {
+  return Math.round(n).toLocaleString('ko-KR') + '원';
+}
 
-
-
-  <script>
 function calculate() {
   const income = Number(document.getElementById('income').value.replace(/,/g, ''));
   const deductionRaw = Number(document.getElementById('deduction').value.replace(/,/g, ''));
   const deduction = Math.min(deductionRaw, income);
   const taxBase = income - deduction;
 
-    let tax = 0;
-    let rate = 0;
-  if (taxBase <= 14000000) {
-    rate = 6; tax = taxBase * 0.06;
-  } else if (taxBase <= 50000000) {
-    rate = 15; tax = taxBase * 0.15 - 1260000;
-  } else if (taxBase <= 88000000) {
-    rate = 24; tax = taxBase * 0.24 - 5760000;
-  } else if (taxBase <= 150000000) {
-    rate = 35; tax = taxBase * 0.35 - 15440000;
-  } else if (taxBase <= 300000000) {
-    rate = 38; tax = taxBase * 0.38 - 19940000;
-  } else if (taxBase <= 500000000) {
-    rate = 40; tax = taxBase * 0.40 - 25940000;
-  } else if (taxBase <= 1000000000) {
-    rate = 42; tax = taxBase * 0.42 - 35940000;
-  } else {
-    rate = 45; tax = taxBase * 0.45 - 65940000;
-  }
-
+  let tax = 0;
+  let rate = 0;
+  if (taxBase <= 14000000) {
+    rate = 6; tax = taxBase * 0.06;
+  } else if (taxBase <= 50000000) {
+    rate = 15; tax = taxBase * 0.15 - 1260000;
+  } else if (taxBase <= 88000000) {
+    rate = 24; tax = taxBase * 0.24 - 5760000;
+  } else if (taxBase <= 150000000) {
+    rate = 35; tax = taxBase * 0.35 - 15440000;
+  } else if (taxBase <= 300000000) {
+    rate = 38; tax = taxBase * 0.38 - 19940000;
+  } else if (taxBase <= 500000000) {
+    rate = 40; tax = taxBase * 0.40 - 25940000;
+  } else if (taxBase <= 1000000000) {
+    rate = 42; tax = taxBase * 0.42 - 35940000;
+  } else {
+    rate = 45; tax = taxBase * 0.45 - 65940000;
+  }
 
   tax = Math.floor(tax / 10) * 10;
   const localTax = Math.floor(tax * 0.1 / 10) * 10;
   const total = tax + localTax;
 
-
-
-  // 쉼표 붙이는 함수
-  function fmt(n) {
-    return Math.round(n).toLocaleString('ko-KR') + '원';
-  }
-
-  
-function fmtInput(el) {
-  const raw = el.value.replace(/[^0-9]/g, '');
-  el.value = raw ? parseInt(raw).toLocaleString('ko-KR') : '';
-}
-
-  // 결과 표에 넣기
   document.getElementById('r-income').textContent = fmt(income);
   document.getElementById('r-deduction').textContent = fmt(deduction);
   document.getElementById('r-taxbase').textContent = fmt(taxBase);
@@ -255,7 +210,6 @@ function fmtInput(el) {
   document.getElementById('result').style.display = 'block';
 }
 
-
 function calculateLeave() {
   const salary = Number(document.getElementById('salary').value.replace(/,/g, ''));
   const workdays = Number(document.getElementById('workdays').value);
@@ -263,30 +217,11 @@ function calculateLeave() {
   const unused = Number(document.getElementById('unusedleave').value);
 
   const weeklyHours = workdays * workhours;
-  const weeklyPaidHours = weeklyHours + 8; // 주휴 포함
+  const weeklyPaidHours = weeklyHours + 8;
   const monthlyHours = weeklyPaidHours * (365 / 7) / 12;
   const hourlyWage = salary / monthlyHours;
   const dailyWage = hourlyWage * workhours;
   const total = dailyWage * unused;
-
-
-
-function showPage(page) {
-  document.getElementById('page-tax').style.display = page === 'tax' ? 'block' : 'none';
-  document.getElementById('page-leave').style.display = page === 'leave' ? 'block' : 'none';
-  document.querySelectorAll('.nav-btn').forEach((btn, i) => {
-    btn.classList.toggle('active', (page === 'tax' && i === 0) || (page === 'leave' && i === 1));
-  });
-}
-
-
-
-
-
-
-  function fmt(n) {
-    return Math.round(n).toLocaleString('ko-KR') + '원';
-  }
 
   document.getElementById('l-salary').textContent = fmt(salary);
   document.getElementById('l-monthly-hours').textContent = Math.round(monthlyHours) + '시간';
@@ -298,13 +233,7 @@ function showPage(page) {
   document.getElementById('result-leave').style.display = 'block';
 }
 
-
-
-
-
-
-
-  </script>
+</script>
 
 </body>
 </html>
