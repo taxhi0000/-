@@ -101,6 +101,12 @@ table {
   background-color: #b8ebd5;
 }
 
+/*종합소득금액 입력 칸 설명*/
+small {
+  color: #ff0000;
+  font-size: 0.8rem;
+}
+
 
 
 
@@ -120,6 +126,7 @@ table {
   <h1>종합소득세 계산기</h1>
   <form>
     <label>종합소득금액</label>
+    <small>종합소득금액은 '연 순이익'을 입력하시면 됩니다.</small>
     <input type="text" id="income" placeholder="예: 50,000,000" oninput="fmtInput(this)" />
     <label>소득공제</label>
     <input type="text" id="deduction" placeholder="예: 1,500,000" oninput="fmtInput(this)" />
