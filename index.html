@@ -156,11 +156,11 @@ small {
     <label>월 급여</label>
     <input type="text" id="salary" placeholder="예: 3,000,000" oninput="fmtInput(this)" />
     <label>주 근로일수</label>
-    <input type="text" id="workdays" placeholder="예: 5" />
+    <input type="text" id="workdays" placeholder="예: 5" oninput="fmtUnit(this, '일')" />
     <label>일 근로시간</label>
-    <input type="text" id="workhours" placeholder="예: 8" />
+    <input type="text" id="workhours" placeholder="예: 8" oninput="fmtUnit(this, '시간')" />
     <label>미사용 연차일수</label>
-    <input type="text" id="unusedleave" placeholder="예: 2" />
+    <input type="text" id="unusedleave" placeholder="예: 2" oninput="fmtUnit(this, '일')" />
     <button type="button" onclick="calculateLeave()">계산하기</button>
   </form>
   <div id="result-leave" style="display:none; margin-top: 20px;">
@@ -314,6 +314,16 @@ function calculateRetirement() {
   document.getElementById('result-retirement').style.display = 'block';
 }
  
+
+
+function fmtUnit(el, unit) {
+  const raw = el.value.replace(/[^0-9]/g, '');
+  el.value = raw ? raw + unit : '';
+}
+
+
+
+
 function calcRetirementTax(retirementPay, serviceYears) {
   // 근속연수공제
   let deduction = 0;
@@ -414,7 +424,7 @@ function calculate() {
 
 function calculateLeave() {
   const salary = Number(document.getElementById('salary').value.replace(/,/g, ''));
-  const workdays = Number(document.getElementById('workdays').value);
+  const workdays = Number(document.getElementById('workdays').value.replace(/[^0-9]/g, ''));
   const workhours = Number(document.getElementById('workhours').value);
   const unused = Number(document.getElementById('unusedleave').value);
 
