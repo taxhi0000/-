@@ -105,16 +105,8 @@ td:last-child {
 </div>
 
   <script>
-  function fmtInput(el) {
-    const raw = el.value.replace(/[^0-9]/g, '');
-    el.value = raw ? parseInt(raw).toLocaleString('ko-KR') : '';
-  }
-
 function calculate() {
   const income = Number(document.getElementById('income').value.replace(/,/g, ''));
-  const deductionRaw = Number(document.getElementById('deduction').value.replace(/,/g, ''));
-
-  // [수정 1] 소득공제가 종합소득금액을 초과하면 종합소득금액으로 cap
   const deduction = Math.min(deductionRaw, income);
   const taxBase = income - deduction;
 
@@ -137,10 +129,15 @@ function calculate() {
     tax = taxBase * 0.45 - 65940000;
   }
 
-  // [수정 2] 소득세, 지방세 원단위 절사 (10원 단위 내림)
   tax = Math.floor(tax / 10) * 10;
   const localTax = Math.floor(tax * 0.1 / 10) * 10;
   const total = tax + localTax;
+
+
+  function fmtInput(el) {
+    const raw = el.value.replace(/[^0-9]/g, '');
+    el.value = raw ? parseInt(raw).toLocaleString('ko-KR') : '';
+  }
 
   // 쉼표 붙이는 함수
   function fmt(n) {
